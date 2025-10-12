@@ -7,6 +7,13 @@ const express = require('express');
 const app = express();
 const PORT = 3000; // Cổng Server thường dùng
 
+// 1. IMPORT Router
+const userRoutes = require('./routes/userRoutes');
+// 2. MIDDLEWARE: BẮT BUỘC phải có để đọc Body JSON từ Request (POST, PUT, PATCH).
+app.use(express.json()); 
+// 3. ĐỊNH TUYẾN GỐC: Tất cả các route trong userRoutes sẽ bắt đầu bằng /api/v1/users
+app.use('/api/v1/users', userRoutes); 
+
 // 3. Xây dựng Route/Endpoint đầu tiên (API chào mừng)
 // Phương thức GET, đường dẫn '/'
 app.get('/', (req, res) => {
