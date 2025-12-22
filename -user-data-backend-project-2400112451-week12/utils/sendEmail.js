@@ -5,8 +5,8 @@ const MAILTRAP_CREDENTIALS = {
   host: 'sandbox.smtp.mailtrap.io',
   port: 2525,
   user: 'd436ef15ef05f9',
-  // NOTE: The screenshot shows a masked password (****7e91). Replace below with your real Mailtrap password
-  pass: process.env.MAILTRAP_PASS || process.env.SMTP_PASS || 'REPLACE_WITH_MAILTRAP_PASS',
+  // NOTE: Password provided by user
+  pass: 'd53c7dfde506ba',
 };
 
 /**
