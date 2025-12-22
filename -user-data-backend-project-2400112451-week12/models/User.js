@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema(
   {
@@ -75,6 +76,21 @@ const userSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Wishlist',
     },
+
+    // ==============================
+    // Password reset token handling
+    // ==============================
+    // Token (hashed) used to verify password reset
+    resetPasswordToken: {
+      type: String,
+      index: true,
+      select: false,
+    },
+    // Expiration time for the reset token
+    resetPasswordExpire: {
+      type: Date,
+      select: false,
+    },
   },
   { timestamps: true }
 );
@@ -96,5 +112,28 @@ userSchema.pre('save', async function (next) {
     next(error);
   }
 });
+
+/// ===============================
+/// METHODS: CREATE RESET TOKEN
+/// ===============================
+/**
+ * Generates a password reset token, stores its hashed value and expiry on the user document,
+ * and returns the raw token for sending via email. The raw token should not be persisted.
+ */
+userSchema.methods.getResetPasswordToken = function () {
+  // Create raw token
+  const resetToken = crypto.randomBytes(20).toString('hex');
+
+  // Hash and set to schema
+  this.resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  // Set expire time (e.g., 10 minutes)
+  this.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
+};
 
 module.exports = mongoose.model('User', userSchema);
