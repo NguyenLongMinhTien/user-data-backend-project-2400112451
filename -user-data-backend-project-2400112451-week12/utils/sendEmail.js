@@ -1,5 +1,14 @@
 const nodemailer = require('nodemailer');
 
+// Mailtrap credentials copied from dashboard (replace pass with your actual value)
+const MAILTRAP_CREDENTIALS = {
+  host: 'sandbox.smtp.mailtrap.io',
+  port: 2525,
+  user: 'd436ef15ef05f9',
+  // NOTE: The screenshot shows a masked password (****7e91). Replace below with your real Mailtrap password
+  pass: process.env.MAILTRAP_PASS || process.env.SMTP_PASS || 'REPLACE_WITH_MAILTRAP_PASS',
+};
+
 /**
  * sendEmail helper using Nodemailer.
  * Designed for Mailtrap Email Sandbox in development/testing.
@@ -11,12 +20,11 @@ const nodemailer = require('nodemailer');
  * - FROM_EMAIL (optional)
  */
 const transporter = nodemailer.createTransport({
-  host:
-    process.env.SMTP_HOST || process.env.MAILTRAP_HOST || 'sandbox.smtp.mailtrap.io',
-  port: Number(process.env.SMTP_PORT || process.env.MAILTRAP_PORT || 2525),
+  host: MAILTRAP_CREDENTIALS.host,
+  port: MAILTRAP_CREDENTIALS.port,
   auth: {
-    user: process.env.SMTP_USER || process.env.MAILTRAP_USER || '',
-    pass: process.env.SMTP_PASS || process.env.MAILTRAP_PASS || '',
+    user: MAILTRAP_CREDENTIALS.user,
+    pass: MAILTRAP_CREDENTIALS.pass,
   },
 });
 
